@@ -8,6 +8,8 @@ use App\Intollerance;
 use App\Diet;
 use App\Conservation;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+
 
 
 class IngredientController extends Controller
@@ -55,6 +57,7 @@ class IngredientController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $diets = Diet::all();
 
 
         $newIngredient = new Ingredient;
@@ -75,7 +78,11 @@ class IngredientController extends Controller
         $newIngredient->save();
 
 
-        $newIngredient->diet()->sync($data["diet"]);
+        foreach ($diets as $diet) {
+
+            $newIngredient->diet()->sync($data[$diet->name]);
+        }
+
         return redirect()->route('ingredient.index');
     }
 
@@ -101,12 +108,15 @@ class IngredientController extends Controller
 
         $conservations = Conservation::all();
         $diets = Diet::all();
+        $diet_ingredient = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->get();
 
+        dump($diet_ingredient);
 
         $data = [
             'ingredient' => $ingredient,
             'conservations' => $conservations,
             'diets' => $diets,
+            'diet_ingrendient' => $diet_ingredient
         ];
 
         return view('user.ingredient.edit', $data);
@@ -122,12 +132,15 @@ class IngredientController extends Controller
     public function update(Request $request, Ingredient $ingredient)
     {
 
-
+        $diets = Diet::all();
         $data = $request->all();
 
 
         $data['availability'] = $request->input('availability');
-        $data['diet'] = $request->input('diet');
+        foreach ($diets as $diet) {
+
+            $data[$diet->name] = $request->input($diet->name);
+        }
 
         $ingredient->availability = 0;
 
@@ -139,7 +152,10 @@ class IngredientController extends Controller
 
         $ingredient->update($data);
 
-        $ingredient->diet()->sync($data["diet"]);
+        foreach ($diets as $diet) {
+
+            $ingredient->diet()->sync($data[$diet->name]);
+        }
 
         return redirect()->route('ingredient.index');
     }
