@@ -61,8 +61,10 @@ class IngredientController extends Controller
 
 
         $data['availability'] = $request->input('availability');
+
         $data['diet'] = $request->input('diet');
 
+        $newIngredient->conservation_ID = $request->input('conservation');
         $newIngredient->availability = 0;
 
         if ($data['availability']) {
@@ -96,7 +98,8 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
-        dump($ingredient->diet($ingredient));
+        dump($ingredient->diet('name'));
+
         $conservations = Conservation::all();
         $diets = Diet::all();
 
