@@ -54,7 +54,7 @@
                         @foreach ($diets as $diet)
                         <label for="diet">{{ $diet->name }}</label>
                       
-                          <input type="checkbox" class="form-control" id="diet" name="diet" value="{{ $diet->id }}">
+                          <input type="checkbox" class="form-control" id="diet" name="{{ $diet->name }}" value="{{ $diet->id }}">
                           @endforeach
               
                     </div>

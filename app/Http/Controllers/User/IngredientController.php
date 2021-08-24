@@ -55,18 +55,18 @@ class IngredientController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $diets = Diet::all();
+
 
         $newIngredient = new Ingredient;
 
 
         $data['availability'] = $request->input('availability');
-
         $data['diet'] = $request->input('diet');
 
-        $newIngredient->conservation_ID = $request->input('conservation');
-        $newIngredient->availability = 0;
 
+        $newIngredient->conservation_ID = $request->input('conservation');
+
+        $newIngredient->availability = 0;
         if ($data['availability']) {
             $newIngredient->availability = 1;
         }
@@ -98,7 +98,6 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
-        dump($ingredient->diet('name'));
 
         $conservations = Conservation::all();
         $diets = Diet::all();
