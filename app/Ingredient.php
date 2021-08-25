@@ -8,7 +8,6 @@ class Ingredient extends Model
 {
     protected $fillable = [
         "name",
-        "availability",
         "conservation_ID",
     ];
 
