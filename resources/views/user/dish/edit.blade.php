@@ -18,9 +18,9 @@
               </div>
               <div class="card-body">
                 {{-- form --}}
-                <form id="form" action="{{route('dish.store')}}" method="post" enctype="multipart/form-data">
+                <form id="form" action="{{route('dish.update', $dish)}}" method="post" enctype="multipart/form-data">
                   @csrf
-                  @method('POST')
+                  @method('PUT')
     
                   <div class="form-group row">
                     <div class="col-md-12">

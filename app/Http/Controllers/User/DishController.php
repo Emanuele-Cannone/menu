@@ -60,6 +60,9 @@ class DishController extends Controller
 
         $newDish = new Dish;
 
+        $data['availability'] = $request->input('availability');
+        $data['promo'] = $request->input('promo');
+        $data['take_away'] = $request->input('take_away');
         // Ingredient
         foreach ($ingredients as $ingredient) {
             $sql = DB::table('ingredient_dish')->where('dish_ID', $newDish->id)->where('ingredient_ID', $ingredient->id);
@@ -160,6 +163,7 @@ class DishController extends Controller
         $dish->availability = 0;
         if ($data['availability']) {
             $dish->availability = 1;
+        } else {
         }
 
         $dish->promo = 0;
@@ -179,7 +183,7 @@ class DishController extends Controller
             $dish->ingredient()->sync($data[$ingredient->name]);
         }
 
-        return redirect()->route('ingredient.index');
+        return redirect()->route('dish.index');
     }
 
     /**
