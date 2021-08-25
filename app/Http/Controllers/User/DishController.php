@@ -165,13 +165,13 @@ class DishController extends Controller
         $images = json_decode($dish->images);
 
 
-        // FUNZIONA DIO MAIALE!
+
         foreach ($images as $k => $image) {
             if (isset($data['img' . $k])) {
-                dump('dio');
+                unset($images[$k]);
             }
         }
-        exit;
+
 
         if ($files = $request->file('images')) {
             foreach ($files as $k => $file) {
