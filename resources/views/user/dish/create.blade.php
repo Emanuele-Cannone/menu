@@ -45,7 +45,7 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="availability">Inserisci promo</label>
+                      <label for="promo">Inserisci promo</label>
                       <input type="checkbox" class="form-control" id="promo" name="promo">
                     </div>
                   </div>

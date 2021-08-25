@@ -10,18 +10,15 @@ class Dish extends Model
     protected $fillable = [
         "name",
         "description",
-        "avaiability",
-        "promo",
         "price",
         "major_price",
-        "take_away",
         "type_ID",
     ];
 
 
     public function ingredient()
     {
-        return $this->hasMany('App\Ingredient', 'ingredient_dish');
+        return $this->belongsToMany('App\Ingredient', 'ingredient_dish')->withPivot('ingredient_ID');
     }
 
     public function type()

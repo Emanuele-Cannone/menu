@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Dish;
 use App\Type;
+use App\Diet;
 use App\Ingredient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -59,15 +60,6 @@ class DishController extends Controller
 
         $newDish = new Dish;
 
-        $data['name'] = $request->input('name');
-        $data['description'] = $request->input('description');
-        $data['availability'] = $request->input('availability');
-        $data['promo'] = $request->input('promo');
-        $data['price'] = $request->input('price');
-        $data['major_price'] = $request->input('major_price');
-        $data['take_away'] = $request->input('take_away');
-        $data['type'] = $request->input('type');
-
         // Ingredient
         foreach ($ingredients as $ingredient) {
             $sql = DB::table('ingredient_dish')->where('dish_ID', $newDish->id)->where('ingredient_ID', $ingredient->id);
@@ -84,16 +76,23 @@ class DishController extends Controller
             $newDish->availability = 1;
         }
 
+        $newDish->promo = 0;
+        if ($data['promo']) {
+            $newDish->promo = 1;
+        }
+
+        $newDish->take_away = 0;
+        if ($data['take_away']) {
+            $newDish->take_away = 1;
+        }
+
         $newDish->fill($data);
         $newDish->save();
 
-
-        // Diet sync
+        // Ingredient sync
         foreach ($ingredients as $ingredient) {
-            $newDish->diet()->sync($data[$ingredient->name]);
+            $newDish->ingredient()->sync($data[$ingredient->name]);
         }
-
-
 
         return redirect()->route('dish.index');
     }
@@ -115,9 +114,21 @@ class DishController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Dish $dish)
     {
-        //
+        $types = Type::all();
+        $ingredients = Ingredient::all();
+
+        $ingredient_dishes = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
+
+        $data = [
+            'dish' => $dish,
+            'types' => $types,
+            'ingredients' => $ingredients,
+            'ingredient_dishes' => $ingredient_dishes,
+        ];
+
+        return view('user.dish.edit', $data);
     }
 
     /**
@@ -127,9 +138,48 @@ class DishController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Dish $dish)
     {
-        //
+        $ingredients = Ingredient::all();
+        $data = $request->all();
+
+        $data['availability'] = $request->input('availability');
+        $data['promo'] = $request->input('promo');
+        $data['take_away'] = $request->input('take_away');
+        $dish->type_ID = $request->input('type');
+
+        // Diets
+        foreach ($ingredients as $ingredient) {
+            $sql = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->where('ingredient_ID', $ingredient->id);
+            $data[$ingredient->name] = $request->input($ingredient->name);
+            if (!$request->input($ingredient->name) || $sql) {
+                $sql->delete();
+            }
+        }
+
+        $dish->availability = 0;
+        if ($data['availability']) {
+            $dish->availability = 1;
+        }
+
+        $dish->promo = 0;
+        if ($data['promo']) {
+            $dish->promo = 1;
+        }
+
+        $dish->take_away = 0;
+        if ($data['take_away']) {
+            $dish->take_away = 1;
+        }
+
+        $dish->update($data);
+
+        // Ingredient sync
+        foreach ($ingredients as $ingredient) {
+            $dish->ingredient()->sync($data[$ingredient->name]);
+        }
+
+        return redirect()->route('ingredient.index');
     }
 
     /**
