@@ -38,10 +38,12 @@ class IngredientController extends Controller
     {
         $conservations = Conservation::all();
         $diets = Diet::all();
+        $intollerances = Intollerance::all();
 
         $data = [
             'conservations' => $conservations,
-            'diets' => $diets
+            'diets' => $diets,
+            'intollerances' => $intollerances,
         ];
 
         return view('user.ingredient.create', $data);
@@ -57,13 +59,30 @@ class IngredientController extends Controller
     {
         $data = $request->all();
         $diets = Diet::all();
-
+        $intollerances = Intollerance::all();
 
         $newIngredient = new Ingredient;
 
-
         $data['availability'] = $request->input('availability');
         $data['diet'] = $request->input('diet');
+
+        // Diets
+        foreach ($diets as $diet) {
+            $sql = DB::table('diet_ingredient')->where('ingredient_ID', $newIngredient->id)->where('diet_ID', $diet->id);
+            $data[$diet->name] = $request->input($diet->name);
+            if (!$request->input($diet->name) || $sql) {
+                $sql->delete();
+            }
+        }
+
+        // Intollerances
+        foreach ($intollerances as $intollerance) {
+            $sql = DB::table('ingredient_intollerance')->where('ingredient_ID', $newIngredient->id)->where('intollerance_ID', $intollerance->id);
+            $data[$intollerance->name] = $request->input($intollerance->name);
+            if (!$request->input($intollerance->name) || $sql) {
+                $sql->delete();
+            }
+        }
 
 
         $newIngredient->conservation_ID = $request->input('conservation');
@@ -77,9 +96,14 @@ class IngredientController extends Controller
         $newIngredient->save();
 
 
+        // Diet sync
         foreach ($diets as $diet) {
-
             $newIngredient->diet()->sync($data[$diet->name]);
+        }
+
+        // Intollerance sync
+        foreach ($intollerances as $intollerance) {
+            $newIngredient->intollerance()->sync($data[$intollerance->name]);
         }
 
         return redirect()->route('ingredient.index');
@@ -106,14 +130,19 @@ class IngredientController extends Controller
     {
         $conservations = Conservation::all();
         $diets = Diet::all();
+        $intollerances = Intollerance::all();
+
         $diet_ingredients = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->get();
+        $intollerance_ingredients = DB::table('ingredient_intollerance')->where('ingredient_ID', $ingredient->id)->get();
 
 
         $data = [
             'ingredient' => $ingredient,
             'conservations' => $conservations,
             'diets' => $diets,
-            'diet_ingredients' => $diet_ingredients
+            'intollerances' => $intollerances,
+            'diet_ingredients' => $diet_ingredients,
+            'intollerance_ingredients' => $intollerance_ingredients
         ];
 
         return view('user.ingredient.edit', $data);
@@ -130,19 +159,26 @@ class IngredientController extends Controller
     {
 
         $diets = Diet::all();
+        $intollerances = Intollerance::all();
         $data = $request->all();
-
-
 
         $data['availability'] = $request->input('availability');
         $ingredient->conservation_ID = $request->input('conservation');
 
+        // Diets
         foreach ($diets as $diet) {
             $sql = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->where('diet_ID', $diet->id);
             $data[$diet->name] = $request->input($diet->name);
-            if (!$request->input($diet->name)) {
+            if (!$request->input($diet->name) || $sql) {
                 $sql->delete();
-            } else if ($sql) {
+            }
+        }
+
+        // Intollerances
+        foreach ($intollerances as $intollerance) {
+            $sql = DB::table('ingredient_intollerance')->where('ingredient_ID', $ingredient->id)->where('intollerance_ID', $intollerance->id);
+            $data[$intollerance->name] = $request->input($intollerance->name);
+            if (!$request->input($intollerance->name) || $sql) {
                 $sql->delete();
             }
         }
@@ -154,8 +190,14 @@ class IngredientController extends Controller
 
         $ingredient->update($data);
 
+        // Diet sync
         foreach ($diets as $diet) {
             $ingredient->diet()->sync($data[$diet->name]);
+        }
+
+        // Intollerance sync
+        foreach ($intollerances as $intollerance) {
+            $ingredient->intollerance()->sync($data[$intollerance->name]);
         }
 
         return redirect()->route('ingredient.index');

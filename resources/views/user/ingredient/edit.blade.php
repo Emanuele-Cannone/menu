@@ -61,6 +61,21 @@
                         @endforeach
                     </div>
                   </div>  
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                        @foreach ($intollerances as $intollerance)
+                          <label for="diet">{{ $intollerance->name }}</label>
+                          <input type="checkbox" class="form-control" id="intollerance" name="{{ $intollerance->name }}" value="{{ $intollerance->id }}" 
+                          <?php
+                            foreach ($intollerance_ingredients as $intollerance_ingredient) {
+                              if ($intollerance_ingredient->intollerance_ID == $intollerance->id)
+                              echo 'checked';
+                            }
+                          ?>>
+                        @endforeach
+                    </div>
+                  </div>  
     
                     <button type="submit" class="btn btn-primary">Salva</button>
     

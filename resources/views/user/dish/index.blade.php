@@ -7,10 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-    @foreach ($types as $type)
-        <p>{{ $type->name }}</p>
-        <a href="{{route('type.edit', $type->id)}}">Modifca</a>
-        <form action="{{ route('type.destroy', $type->id) }}" method='post'>
+    @foreach ($dishes as $dish)
+        <p>{{ $dish->name }}</p>
+        <a href="{{route('dish.edit', $dish->id)}}">Modifca</a>
+        <form action="{{ route('dish.destroy', $dish->id) }}" method='post'>
             @csrf
             @method('delete')
             <div class="form-group">

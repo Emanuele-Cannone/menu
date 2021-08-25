@@ -26,4 +26,6 @@ Route::prefix('user')
     ->middleware('auth')
     ->group(function () {
         Route::resource('ingredient', 'IngredientController');
+        Route::resource('type', 'TypeController');
+        Route::resource('dish', 'DishController');
     });

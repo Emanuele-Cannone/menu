@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Type;
 
 class TypeController extends Controller
 {
@@ -13,7 +15,13 @@ class TypeController extends Controller
      */
     public function index()
     {
-        //
+        $types = Type::all();
+
+        $data = [
+            'types' => $types
+        ];
+
+        return view('user.type.index', $data);
     }
 
     /**
@@ -23,7 +31,7 @@ class TypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.type.create');
     }
 
     /**
@@ -34,7 +42,14 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $newType = new Type;
+
+        $newType->fill($data);
+        $newType->save();
+
+        return redirect()->route('type.index');
     }
 
     /**
@@ -54,9 +69,13 @@ class TypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Type $type)
     {
-        //
+        $data = [
+            'type' => $type,
+        ];
+
+        return view('user.type.edit', $data);
     }
 
     /**
@@ -66,9 +85,13 @@ class TypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Type $type)
     {
-        //
+        $data = $request->all();
+
+        $type->update($data);
+
+        return redirect()->route('type.index');
     }
 
     /**

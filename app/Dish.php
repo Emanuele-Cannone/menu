@@ -6,9 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dish extends Model
 {
+
+    protected $fillable = [
+        "name",
+        "description",
+        "avaiability",
+        "promo",
+        "price",
+        "major_price",
+        "take_away",
+        "type_ID",
+    ];
+
+
     public function ingredient()
     {
-        return $this->hasMany('App\Ingredient');
+        return $this->hasMany('App\Ingredient', 'ingredient_dish');
     }
 
     public function type()

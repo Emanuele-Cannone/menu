@@ -18,7 +18,7 @@
               </div>
               <div class="card-body">
                 {{-- form --}}
-                <form id="form" action="{{route('ingredient.store')}}" method="post" enctype="multipart/form-data">
+                <form id="form" action="{{route('dish.store')}}" method="post" enctype="multipart/form-data">
                   @csrf
                   @method('POST')
     
@@ -28,6 +28,13 @@
                       <input type="text" class="form-control" id="name" name="name">
                     </div>
                   </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="description">Inserisci descrizione</label>
+                      <input type="text" class="form-control" id="description" name="description">
+                    </div>
+                  </div>
     
                   <div class="form-group row">
                     <div class="col-md-12">
@@ -35,24 +42,41 @@
                       <input type="checkbox" class="form-control" id="availability" name="availability">
                     </div>
                   </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="availability">Inserisci promo</label>
+                      <input type="checkbox" class="form-control" id="promo" name="promo">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="price">Inserisci prezzo</label>
+                      <input type="number" class="form-control" id="price" name="price">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="major_price">Inserisci descrizione</label>
+                      <input type="text" class="form-control" id="major_price" name="major_price">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="take_away">Inserisci take away</label>
+                      <input type="checkbox" class="form-control" id="take_away" name="take_away">
+                    </div>
+                  </div>
     
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="conservation">Inserisci tipologia di conservazione</label>
-                      <select name="conservation" id="conservation">
-                          @foreach ($conservations as $conservation)
-                              <option value="{{ $conservation->id }}">{{ $conservation->name }}</option>
-                          @endforeach
-                      </select>
-                    </div>
-                  </div>  
-                  
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                        @foreach ($diets as $diet)
-                        <label for="diet">{{ $diet->name }}</label>
+                        @foreach ($ingredients as $ingredient)
+                        <label for="ingredient">{{ $ingredient->name }}</label>
                       
-                          <input type="checkbox" class="form-control" id="diet" name="{{ $diet->name }}" value="{{ $diet->id }}">
+                          <input type="checkbox" class="form-control" id="ingredient" name="{{ $ingredient->name }}" value="{{ $ingredient->id }}">
                           @endforeach
               
                     </div>
@@ -60,12 +84,12 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                        @foreach ($intollerances as $intollerance)
-                        <label for="intollerance">{{ $intollerance->name }}</label>
-                      
-                          <input type="checkbox" class="form-control" id="intollerance" name="{{ $intollerance->name }}" value="{{ $intollerance->id }}">
+                      <label for="type">Inserisci tipologia</label>
+                      <select name="type" id="type">
+                          @foreach ($types as $type)
+                              <option value="{{ $type->id }}">{{ $type->name }}</option>
                           @endforeach
-              
+                      </select>
                     </div>
                   </div>  
                   

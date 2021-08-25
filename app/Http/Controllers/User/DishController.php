@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
+use App\Dish;
+use App\Type;
+use App\Ingredient;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class DishController extends Controller
 {
@@ -13,6 +18,13 @@ class DishController extends Controller
      */
     public function index()
     {
+        $dishes = Dish::all();
+
+        $data = [
+            'dishes' => $dishes
+        ];
+
+        return view('user.dish.index', $data);
     }
 
     /**
@@ -22,7 +34,16 @@ class DishController extends Controller
      */
     public function create()
     {
-        //
+        $types = Type::all();
+        $ingredients = Ingredient::all();
+
+
+        $data = [
+            'types' => $types,
+            'ingredients' => $ingredients,
+        ];
+
+        return view('user.dish.create', $data);
     }
 
     /**
@@ -33,7 +54,48 @@ class DishController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $ingredients = Ingredient::all();
+
+        $newDish = new Dish;
+
+        $data['name'] = $request->input('name');
+        $data['description'] = $request->input('description');
+        $data['availability'] = $request->input('availability');
+        $data['promo'] = $request->input('promo');
+        $data['price'] = $request->input('price');
+        $data['major_price'] = $request->input('major_price');
+        $data['take_away'] = $request->input('take_away');
+        $data['type'] = $request->input('type');
+
+        // Ingredient
+        foreach ($ingredients as $ingredient) {
+            $sql = DB::table('ingredient_dish')->where('dish_ID', $newDish->id)->where('ingredient_ID', $ingredient->id);
+            $data[$ingredient->name] = $request->input($ingredient->name);
+            if (!$request->input($ingredient->name) || $sql) {
+                $sql->delete();
+            }
+        }
+
+        $newDish->type_ID = $request->input('type');
+
+        $newDish->availability = 0;
+        if ($data['availability']) {
+            $newDish->availability = 1;
+        }
+
+        $newDish->fill($data);
+        $newDish->save();
+
+
+        // Diet sync
+        foreach ($ingredients as $ingredient) {
+            $newDish->diet()->sync($data[$ingredient->name]);
+        }
+
+
+
+        return redirect()->route('dish.index');
     }
 
     /**
