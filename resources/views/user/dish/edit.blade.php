@@ -97,6 +97,15 @@
                       </select>
                     </div>
                   </div>  
+
+
+                  @if ($images)
+                     
+                    @foreach ($pieces as $piece)
+                        <img src="../../../../../image/{{$piece}}" alt="2" style="height: 100px;">
+                    @endforeach
+
+                  @endif
                   
     
                     <button type="submit" class="btn btn-primary">Salva</button>

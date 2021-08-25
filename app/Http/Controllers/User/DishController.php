@@ -10,6 +10,7 @@ use App\Ingredient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\User\Detail;
 
 class DishController extends Controller
 {
@@ -61,6 +62,15 @@ class DishController extends Controller
 
         $newDish = new Dish;
 
+        $images = array();
+        if ($files = $request->file('images')) {
+            foreach ($files as $file) {
+                $name = $file->getClientOriginalName();
+                $file->move('image', $name);
+                $images[] = $name;
+            }
+        }
+
         $data['availability'] = $request->input('availability');
         $data['promo'] = $request->input('promo');
         $data['take_away'] = $request->input('take_away');
@@ -93,16 +103,12 @@ class DishController extends Controller
         $newDish->fill($data);
         $newDish->save();
 
+        Image::insert([
+            'path' =>  implode("|", $images),
+            'dish_ID' => $newDish->id
+            //you can put other insertion here
+        ]);
 
-        if (array_key_exists('dish_images', $data)) {
-
-            foreach ($data["dish_images"] as $image) {
-                $newImage = new Image;
-                $newImage->dish_ID = $newDish->id;
-                $newImage->path = Storage::put("covers", $image);
-                $newImage->save();
-            }
-        }
 
         // Ingredient sync
         foreach ($ingredients as $ingredient) {
@@ -136,11 +142,19 @@ class DishController extends Controller
 
         $ingredient_dishes = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
 
+        $images = DB::table('images')->where('dish_ID', $dish->id)->get();
+
+        foreach ($images as $image) {
+            $pieces = explode("|", $image->path);
+        }
+
         $data = [
             'dish' => $dish,
             'types' => $types,
             'ingredients' => $ingredients,
             'ingredient_dishes' => $ingredient_dishes,
+            'images' => $images,
+            'pieces' => $pieces,
         ];
 
         return view('user.dish.edit', $data);
@@ -189,17 +203,6 @@ class DishController extends Controller
         }
 
         $dish->update($data);
-
-
-        if (array_key_exists('dish_images', $data)) {
-
-            foreach ($data["dish_images"] as $image) {
-                $newImage = new Image;
-                $newImage->dish_ID = $dish->id;
-                $newImage->path = Storage::put("covers", $image);
-                $newImage->save();
-            }
-        }
 
         // Ingredient sync
         foreach ($ingredients as $ingredient) {
