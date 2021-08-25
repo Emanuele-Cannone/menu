@@ -66,10 +66,11 @@ class DishController extends Controller
         if ($files = $request->file('images')) {
             foreach ($files as $file) {
                 $name = $file->getClientOriginalName();
-                $file->move('image', $name);
                 $images[] = $name;
             }
-        }
+        };
+
+        $newDish->images = json_encode($images);
 
         $data['availability'] = $request->input('availability');
         $data['promo'] = $request->input('promo');
@@ -103,13 +104,6 @@ class DishController extends Controller
         $newDish->fill($data);
         $newDish->save();
 
-        Image::insert([
-            'path' =>  implode("|", $images),
-            'dish_ID' => $newDish->id
-            //you can put other insertion here
-        ]);
-
-
         // Ingredient sync
         foreach ($ingredients as $ingredient) {
             $newDish->ingredient()->sync($data[$ingredient->name]);
@@ -142,11 +136,8 @@ class DishController extends Controller
 
         $ingredient_dishes = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
 
-        $images = DB::table('images')->where('dish_ID', $dish->id)->get();
+        $images = json_decode($dish->images);
 
-        foreach ($images as $image) {
-            $pieces = explode("|", $image->path);
-        }
 
         $data = [
             'dish' => $dish,
@@ -154,7 +145,6 @@ class DishController extends Controller
             'ingredients' => $ingredients,
             'ingredient_dishes' => $ingredient_dishes,
             'images' => $images,
-            'pieces' => $pieces,
         ];
 
         return view('user.dish.edit', $data);
@@ -171,6 +161,26 @@ class DishController extends Controller
     {
         $ingredients = Ingredient::all();
         $data = $request->all();
+
+        $images = json_decode($dish->images);
+
+        if ($files = $request->file('images')) {
+            foreach ($files as $file) {
+                $name = $file->getClientOriginalName();
+                $images[] = $name;
+            }
+        };
+
+
+
+        foreach ($images as $image) {
+
+            if()
+            dump($image);
+        }
+        exit;
+
+        $dish->images = json_encode($images);
 
         $data['availability'] = $request->input('availability');
         $data['promo'] = $request->input('promo');

@@ -99,10 +99,18 @@
                   </div>  
 
 
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                    <label for="">Inserisci immagini del tuo appartamento</label>
+                    <input  type="file" class="form-control" name="images[]" placeholder="address" multiple>
+                    </div>
+                  </div>
+
                   @if ($images)
                      
-                    @foreach ($pieces as $piece)
-                        <img src="../../../../../image/{{$piece}}" alt="2" style="height: 100px;">
+                    @foreach ($images as $image)
+                        <img src="../../../../../image/{{$image}}" alt="2" style="height: 100px;">
+                        <input type="checkbox" name="{{ $image }}">
                     @endforeach
 
                   @endif
