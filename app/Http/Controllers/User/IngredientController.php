@@ -8,6 +8,7 @@ use App\Intollerance;
 use App\Diet;
 use App\Conservation;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 
 class IngredientController extends Controller
@@ -96,10 +97,8 @@ class IngredientController extends Controller
      */
     public function edit(Ingredient $ingredient)
     {
-        dump($ingredient->diet($ingredient));
         $conservations = Conservation::all();
         $diets = Diet::all();
-
 
         $data = [
             'ingredient' => $ingredient,
@@ -119,13 +118,21 @@ class IngredientController extends Controller
      */
     public function update(Request $request, Ingredient $ingredient)
     {
-
-
         $data = $request->all();
 
 
         $data['availability'] = $request->input('availability');
-        $data['diet'] = $request->input('diet');
+        $diets = Diet::all();
+        foreach ($diets as $diet) {
+            $data[$diet->name] = $request->input($diet->name);
+            if ($request->input($diet->name) == 0) {
+                $diet_ingredients = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->where('diet_ID', $diet->id)->delete();
+            }
+            if ($request->input($diet->name) != 0) {
+                $diet_ingredients = DB::table('diet_ingredient');
+                $diet_ingredients->update($data);
+            }
+        }
 
         $ingredient->availability = 0;
 
@@ -135,9 +142,13 @@ class IngredientController extends Controller
 
         $ingredient->conservation_ID = $request->input('conservation');
 
+
+
         $ingredient->update($data);
 
-        $ingredient->diet()->sync($data["diet"]);
+        foreach ($diets as $diet) {
+            $ingredient->diet()->sync($data[$diet->name]);
+        }
 
         return redirect()->route('ingredient.index');
     }

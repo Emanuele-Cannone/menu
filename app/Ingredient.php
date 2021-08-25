@@ -14,7 +14,7 @@ class Ingredient extends Model
 
     public function diet()
     {
-        return $this->belongsToMany('App\Diet', 'diet_ingredient');
+        return $this->belongsToMany('App\Diet', 'diet_ingredient')->withPivot('diet_ID');
     }
 
 

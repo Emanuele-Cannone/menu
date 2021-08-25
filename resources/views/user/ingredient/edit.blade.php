@@ -47,16 +47,19 @@
                     </div>
                   </div>   
 
-
-                  
                   <div class="form-group row">
                     <div class="col-md-12">
                         @foreach ($diets as $diet)
-                        <label for="diet">{{ $diet->name }}</label>
-                      
-                          <input type="checkbox" class="form-control" id="diet" name="diet" value="{{ $diet->id }}">
-                          @endforeach
-              
+                          <label for="diet">{{ $diet->name }}</label>
+                          <input type="checkbox" class="form-control" id="diet" name="{{ $diet->name }}" value="{{ $diet->id }}" 
+                          <?php
+                            $diet_ingredients = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->get();
+                            foreach ($diet_ingredients as $diet_ingredient) {
+                              if ($diet_ingredient->diet_ID == $diet->id)
+                              echo 'checked';
+                            }
+                          ?>>
+                        @endforeach
                     </div>
                   </div>  
     
