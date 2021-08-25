@@ -106,13 +106,14 @@ class IngredientController extends Controller
     {
         $conservations = Conservation::all();
         $diets = Diet::all();
-        $diet_ingredient = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->get();
+        $diet_ingredients = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->get();
+
 
         $data = [
             'ingredient' => $ingredient,
             'conservations' => $conservations,
             'diets' => $diets,
-            'diet_ingrendient' => $diet_ingredient
+            'diet_ingredients' => $diet_ingredients
         ];
 
         return view('user.ingredient.edit', $data);
@@ -132,28 +133,24 @@ class IngredientController extends Controller
         $data = $request->all();
 
 
+
         $data['availability'] = $request->input('availability');
-        $diets = Diet::all();
+        $ingredient->conservation_ID = $request->input('conservation');
+
         foreach ($diets as $diet) {
+            $sql = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->where('diet_ID', $diet->id);
             $data[$diet->name] = $request->input($diet->name);
-            if ($request->input($diet->name) == 0) {
-                $diet_ingredients = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->where('diet_ID', $diet->id)->delete();
-            }
-            if ($request->input($diet->name) != 0) {
-                $diet_ingredients = DB::table('diet_ingredient');
-                $diet_ingredients->update($data);
+            if (!$request->input($diet->name)) {
+                $sql->delete();
+            } else if ($sql) {
+                $sql->delete();
             }
         }
 
         $ingredient->availability = 0;
-
         if ($data['availability']) {
             $ingredient->availability = 1;
         }
-
-        $ingredient->conservation_ID = $request->input('conservation');
-
-
 
         $ingredient->update($data);
 
