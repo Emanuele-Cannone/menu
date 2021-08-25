@@ -108,8 +108,8 @@
 
                   @if ($images)
                      
-                    @foreach ($images as $image)
-                        <img src="../../../../../image/{{$image}}" alt="2" style="height: 100px;">
+                    @foreach ($images as $k => $image)
+                        <img src="../../../../../image/{{$image}}" alt="{{ $k }}" style="height: 100px;">
                         <input type="checkbox" name="{{ $image }}">
                     @endforeach
 

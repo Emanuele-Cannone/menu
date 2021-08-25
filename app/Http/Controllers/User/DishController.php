@@ -172,11 +172,11 @@ class DishController extends Controller
         };
 
 
+        foreach ($images as $k => $image) {
 
-        foreach ($images as $image) {
+            // prendere il valore del name chechkato
 
-            if()
-            dump($image);
+
         }
         exit;
 
