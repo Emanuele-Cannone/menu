@@ -58,14 +58,17 @@ class IngredientController extends Controller
         $data = $request->all();
         $diets = Diet::all();
 
+
         $newIngredient = new Ingredient;
 
 
         $data['availability'] = $request->input('availability');
         $data['diet'] = $request->input('diet');
 
-        $newIngredient->availability = 0;
 
+        $newIngredient->conservation_ID = $request->input('conservation');
+
+        $newIngredient->availability = 0;
         if ($data['availability']) {
             $newIngredient->availability = 1;
         }
@@ -74,7 +77,11 @@ class IngredientController extends Controller
         $newIngredient->save();
 
 
-        $newIngredient->diet()->sync($data["diet"]);
+        foreach ($diets as $diet) {
+
+            $newIngredient->diet()->sync($data[$diet->name]);
+        }
+
         return redirect()->route('ingredient.index');
     }
 
@@ -99,11 +106,13 @@ class IngredientController extends Controller
     {
         $conservations = Conservation::all();
         $diets = Diet::all();
+        $diet_ingredient = DB::table('diet_ingredient')->where('ingredient_ID', $ingredient->id)->get();
 
         $data = [
             'ingredient' => $ingredient,
             'conservations' => $conservations,
             'diets' => $diets,
+            'diet_ingrendient' => $diet_ingredient
         ];
 
         return view('user.ingredient.edit', $data);
@@ -118,6 +127,8 @@ class IngredientController extends Controller
      */
     public function update(Request $request, Ingredient $ingredient)
     {
+
+        $diets = Diet::all();
         $data = $request->all();
 
 
