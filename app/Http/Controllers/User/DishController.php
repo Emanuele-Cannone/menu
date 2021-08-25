@@ -5,10 +5,11 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Dish;
 use App\Type;
-use App\Diet;
+use App\Image;
 use App\Ingredient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DishController extends Controller
 {
@@ -91,6 +92,17 @@ class DishController extends Controller
 
         $newDish->fill($data);
         $newDish->save();
+
+
+        if (array_key_exists('dish_images', $data)) {
+
+            foreach ($data["dish_images"] as $image) {
+                $newImage = new Image;
+                $newImage->dish_ID = $newDish->id;
+                $newImage->path = Storage::put("covers", $image);
+                $newImage->save();
+            }
+        }
 
         // Ingredient sync
         foreach ($ingredients as $ingredient) {
@@ -177,6 +189,17 @@ class DishController extends Controller
         }
 
         $dish->update($data);
+
+
+        if (array_key_exists('dish_images', $data)) {
+
+            foreach ($data["dish_images"] as $image) {
+                $newImage = new Image;
+                $newImage->dish_ID = $dish->id;
+                $newImage->path = Storage::put("covers", $image);
+                $newImage->save();
+            }
+        }
 
         // Ingredient sync
         foreach ($ingredients as $ingredient) {

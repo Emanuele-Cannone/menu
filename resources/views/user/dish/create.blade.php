@@ -93,6 +93,13 @@
                     </div>
                   </div>  
                   
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                    <label for="dish_images">Inserisci immagini del tuo appartamento</label>
+                    <input type="file" class="form-control-file" id="dish_images" name="dish_images[]" multiple>
+                    </div>
+                  </div>
     
                     <button type="submit" class="btn btn-primary">Salva</button>
     
