@@ -9,7 +9,7 @@
 <body>
     @foreach ($types as $type)
         <p>{{ $type->name }}</p>
-        <a href="{{route('type.edit', $type->id)}}">Modifca</a>
+        <a href="{{route('type.edit', $type->id)}}">Modifica</a>
         <form action="{{ route('type.destroy', $type->id) }}" method='post'>
             @csrf
             @method('delete')

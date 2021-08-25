@@ -14,7 +14,7 @@
           <div class="col-md-8 col-lg-6">
             <div class="card">
               <div class="card-header text-center font-weight-bold">
-                Nuovo annuncio
+                Nuova portata
               </div>
               <div class="card-body">
                 {{-- form --}}

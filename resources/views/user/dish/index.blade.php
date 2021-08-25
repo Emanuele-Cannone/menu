@@ -9,7 +9,7 @@
 <body>
     @foreach ($dishes as $dish)
         <p>{{ $dish->name }}</p>
-        <a href="{{route('dish.edit', $dish->id)}}">Modifca</a>
+        <a href="{{route('dish.edit', $dish->id)}}">Modifica</a>
         <form action="{{ route('dish.destroy', $dish->id) }}" method='post'>
             @csrf
             @method('delete')

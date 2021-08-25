@@ -14,7 +14,7 @@
           <div class="col-md-8 col-lg-6">
             <div class="card">
               <div class="card-header text-center font-weight-bold">
-                Nuovo annuncio
+                Nuovo piatto
               </div>
               <div class="card-body">
                 {{-- form --}}
@@ -59,7 +59,7 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="major_price">Inserisci descrizione</label>
+                      <label for="major_price">Inserisci maggiorazione</label>
                       <input type="text" class="form-control" id="major_price" name="major_price" value="{{ $dish->major_price }}">
                     </div>
                   </div>
@@ -101,7 +101,13 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                    <label for="">Inserisci immagini del tuo appartamento</label>
+                    <label for="">
+                      @if ($images)
+                        Modifica le immagini      
+                      @else
+                        Inserisci immagini del tuo appartamento
+                      @endif
+                    </label>    
                     <input  type="file" class="form-control" name="images[]" placeholder="address" multiple>
                     </div>
                   </div>
@@ -109,8 +115,8 @@
                   @if ($images)
                      
                     @foreach ($images as $k => $image)
-                        <img src="../../../../../image/{{$image}}" alt="{{ $k }}" style="height: 100px;">
-                        <input type="checkbox" name="{{ $image }}">
+                        <img src="" alt="{{ $k }}" style="height: 100px;">
+                        <input type="checkbox" name="img{{ $k }}">
                     @endforeach
 
                   @endif

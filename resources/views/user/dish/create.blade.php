@@ -14,7 +14,7 @@
           <div class="col-md-8 col-lg-6">
             <div class="card">
               <div class="card-header text-center font-weight-bold">
-                Nuovo annuncio
+                Nuovo piatto
               </div>
               <div class="card-body">
                 {{-- form --}}
@@ -59,8 +59,8 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="major_price">Inserisci descrizione</label>
-                      <input type="text" class="form-control" id="major_price" name="major_price">
+                      <label for="major_price">Inserisci maggiorazione</label>
+                      <input type="number" class="form-control" id="major_price" name="major_price">
                     </div>
                   </div>
 
@@ -96,7 +96,7 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                    <label for="">Inserisci immagini del tuo appartamento</label>
+                    <label for="">Inserisci immagini del tuo piatto</label>
                     <input  type="file" class="form-control" name="images[]" placeholder="address" multiple>
                     </div>
                   </div>
