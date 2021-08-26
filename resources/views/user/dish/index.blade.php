@@ -13,7 +13,16 @@
         $pippos = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
             foreach ($pippos as $pippo) {
                 $ingredients = DB::table('ingredients')->where('id', $pippo->ingredient_ID)->get();
-                dump($ingredients);
+                foreach ($ingredients as $ingredient) {
+                    dump($ingredient->name);
+                    $cristos = DB::table('ingredient_intollerance')->where('ingredient_ID', $ingredient->id)->get();
+                    foreach ($cristos as $cristo) {
+                        $intollerances = DB::table('intollerances')->where('id', $cristo->intollerance_ID)->get();
+                        foreach ($intollerances as $intollerance) {
+                            dump($intollerance->name);
+                        }
+                    }
+                }
             }
         ?>
 
