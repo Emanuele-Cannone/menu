@@ -38,8 +38,8 @@
     
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="availability">Inserisci disponibilità</label>
-                      <input type="checkbox" class="form-control" id="availability" name="availability" <?php echo ($dish->availability) ? 'checked' : '' ?>>
+                      <label for="available">Inserisci disponibilità</label>
+                      <input type="checkbox" class="form-control" id="available" name="available" <?php echo ($dish->available) ? 'checked' : '' ?>>
                     </div>
                   </div>
 
@@ -71,21 +71,7 @@
                     </div>
                   </div>
     
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                        @foreach ($ingredients as $ingredient)
-                        <label for="ingredient">{{ $ingredient->name }}</label>
-                          <input type="checkbox" class="form-control" id="ingredient" name="{{ $ingredient->name }}" value="{{ $ingredient->id }}"
-                          <?php
-                            foreach ($ingredient_dishes as $ingredient_dish) {
-                              if ($ingredient_dish->ingredient_ID == $ingredient->id)
-                              echo 'checked';
-                            }
-                          ?>>
-                          @endforeach
-              
-                    </div>
-                  </div>  
+
 
                   <div class="form-group row">
                     <div class="col-md-12">
@@ -93,6 +79,29 @@
                       <select name="type" id="type">
                           @foreach ($types as $type)
                               <option value="{{ $type->id }}" <?php echo ($type->id == $dish->type_ID) ? 'selected' : '' ?>>{{ $type->name }}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                  </div>  
+
+                                      <div class="col-md-12">
+                      <label for="intollerance">Inserisci intolleranza</label>
+                      <select name="intollerance" id="intollerance">
+                        <option value="0">-</option>
+                          @foreach ($intollerances as $intollerance)
+                              <option value="{{ $intollerance->id }}"<?php echo ($intollerance->id == $dish->intollerance_id) ? 'selected' : '' ?>>{{ $intollerance->name }}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                  </div>  
+
+
+                                    <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="diet">Inserisci dieta</label>
+                      <select name="diet" id="diet">
+                          @foreach ($diets as $diet)
+                              <option value="{{ $diet->id }}"<?php echo ($diet->id == $dish->idiet_id) ? 'selected' : '' ?>>{{ $diet->name }}</option>
                           @endforeach
                       </select>
                     </div>

@@ -128,13 +128,16 @@ class DishController extends Controller
         $types = Type::all();
         $diets = Diet::all();
         $intollerances = Intollerance::all();
+        $images = json_decode($dish->images);
 
 
 
         $data = [
+            'dish' => $dish,
             'types' => $types,
             'diets' => $diets,
             'intollerances' => $intollerances,
+            'images' => $images,
         ];
 
         return view('user.dish.edit', $data);

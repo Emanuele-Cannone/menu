@@ -9,15 +9,15 @@ class Dish extends Model
 
     protected $fillable = [
         "name",
-        "type_id",
-        "intollerance_id",
-        "diet_id",
+        // "type_id",
+        // "intollerance_id",
+        // "diet_id",
         "description",
-        // "available",
+        // // "available",
         "price",
-        // "take_away",
+        // // "take_away",
         "conservation",
-        "images",
+        // "images",
         "video",
     ];
 
