@@ -13,6 +13,7 @@ class Dish extends Model
         "price",
         "major_price",
         "type_ID",
+        "video",
     ];
 
 

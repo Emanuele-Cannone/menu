@@ -101,14 +101,14 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                    <label for="">
+                    <label for="images[]">
                       @if ($images)
                         Modifica le immagini      
                       @else
                         Inserisci immagini del tuo appartamento
                       @endif
                     </label>    
-                    <input  type="file" class="form-control" name="images[]" placeholder="address" multiple>
+                    <input type="file" class="form-control" name="images[]" placeholder="address" multiple>
                     </div>
                   </div>
 
@@ -120,6 +120,23 @@
                     @endforeach
 
                   @endif
+
+                  
+                  
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="video">
+                        
+                        @if ($dish->video)
+                        Modifica il video del tuo piatto
+                        <input type="checkbox" name="video">
+                        @else
+                        Inserisci video del tuo piatto
+                        @endif
+                        </label>
+                    <input  type="file" class="form-control" name="video[]" placeholder="address" >
+                    </div>
+                  </div>
                   
     
                     <button type="submit" class="btn btn-primary">Salva</button>

@@ -75,6 +75,7 @@ class DishController extends Controller
         $data['availability'] = $request->input('availability');
         $data['promo'] = $request->input('promo');
         $data['take_away'] = $request->input('take_away');
+        
         // Ingredient
         foreach ($ingredients as $ingredient) {
             $sql = DB::table('ingredient_dish')->where('dish_ID', $newDish->id)->where('ingredient_ID', $ingredient->id);
@@ -85,6 +86,7 @@ class DishController extends Controller
         }
 
         $newDish->type_ID = $request->input('type');
+        $newDish->video = $request->input('video');
 
         $newDish->availability = 0;
         if ($data['availability']) {
@@ -180,11 +182,14 @@ class DishController extends Controller
             }
         };
 
+        
+
         $dish->images = json_encode($images);
 
         $data['availability'] = $request->input('availability');
         $data['promo'] = $request->input('promo');
         $data['take_away'] = $request->input('take_away');
+        
         $dish->type_ID = $request->input('type');
 
         // Diets
@@ -210,6 +215,10 @@ class DishController extends Controller
         $dish->take_away = 0;
         if ($data['take_away']) {
             $dish->take_away = 1;
+        }
+
+        if(isset($data['video'])){
+            $dish->video = 0;
         }
 
         $dish->update($data);

@@ -96,8 +96,15 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                    <label for="">Inserisci immagini del tuo piatto</label>
+                    <label for="images[]">Inserisci immagini del tuo piatto</label>
                     <input  type="file" class="form-control" name="images[]" placeholder="address" multiple>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                    <label for="video">Inserisci video del tuo piatto</label>
+                    <input  type="file" class="form-control" name="video" placeholder="address" >
                     </div>
                   </div>
     
