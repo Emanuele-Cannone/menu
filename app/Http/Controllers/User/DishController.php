@@ -7,6 +7,7 @@ use App\Dish;
 use App\Type;
 use App\Diet;
 use App\Intollerance;
+use App\Conservation;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +23,6 @@ class DishController extends Controller
     public function index()
     {
         $dishes = Dish::all();
-
 
         $data = [
             'dishes' => $dishes,
@@ -41,13 +41,13 @@ class DishController extends Controller
         $types = Type::all();
         $diets = Diet::all();
         $intollerances = Intollerance::all();
-
-
+        $conservations = Conservation::all();
 
         $data = [
             'types' => $types,
             'diets' => $diets,
             'intollerances' => $intollerances,
+            'conservations' => $conservations,
         ];
 
         return view('user.dish.create', $data);
@@ -62,7 +62,8 @@ class DishController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
+        $intollerances = Intollerance::all();
+        // $conservations = Conservation::all();
 
         $newDish = new Dish;
 
@@ -76,18 +77,27 @@ class DishController extends Controller
 
         $newDish->images = json_encode($images);
 
-        $data['available'] = $request->input('availability');
+        $data['available'] = $request->input('available');
         $data['promo'] = $request->input('promo');
         $data['take_away'] = $request->input('take_away');
 
+        // Intollerances
+        foreach ($intollerances as $intollerance) {
+            $sql = DB::table('dish_intollerance')->where('dish_id', $newDish->id)->where('intollerance_id', $intollerance->id);
+            $data[$intollerance->name] = $request->input($intollerance->name);
+            if (!$request->input($intollerance->name) || $sql) {
+                $sql->delete();
+            }
+        }
+
         $newDish->type_id = $request->input('type');
-        $newDish->intollerance_id = $request->input('intollerance');
         $newDish->diet_id = $request->input('diet');
         $newDish->video = $request->input('video');
+        $newDish->conservation_id = $request->input('conservation');
 
         $newDish->available = 0;
         if ($data['available']) {
-            $newDish->availability = 1;
+            $newDish->available = 1;
         }
 
         $newDish->promo = 0;
@@ -128,15 +138,16 @@ class DishController extends Controller
         $types = Type::all();
         $diets = Diet::all();
         $intollerances = Intollerance::all();
+        $conservations = Conservation::all();
+
         $images = json_decode($dish->images);
-
-
 
         $data = [
             'dish' => $dish,
             'types' => $types,
             'diets' => $diets,
             'intollerances' => $intollerances,
+            'conservations' => $conservations,
             'images' => $images,
         ];
 
@@ -154,17 +165,15 @@ class DishController extends Controller
     {
 
         $data = $request->all();
+        $intollerances = Intollerance::all();
 
         $images = json_decode($dish->images);
-
-
 
         foreach ($images as $k => $image) {
             if (isset($data['img' . $k])) {
                 unset($images[$k]);
             }
         }
-
 
         if ($files = $request->file('images')) {
             foreach ($files as $k => $file) {
@@ -173,8 +182,6 @@ class DishController extends Controller
             }
         };
 
-
-
         $dish->images = json_encode($images);
 
         $data['available'] = $request->input('available');
@@ -182,12 +189,18 @@ class DishController extends Controller
         $data['take_away'] = $request->input('take_away');
 
         $dish->type_id = $request->input('type');
-        $dish->intollerance_id = $request->input('intollerance');
+        $dish->conservation_id = $request->input('conservation');
         $dish->diet_id = $request->input('diet');
         $dish->video = $request->input('video');
 
-
-
+        // Intollerances
+        foreach ($intollerances as $intollerance) {
+            $sql = DB::table('dish_intollerance')->where('dish_id', $dish->id)->where('intollerance_id', $intollerance->id);
+            $data[$intollerance->name] = $request->input($intollerance->name);
+            if (!$request->input($intollerance->name) || $sql) {
+                $sql->delete();
+            }
+        }
 
         $dish->available = 0;
         if ($data['available']) {
