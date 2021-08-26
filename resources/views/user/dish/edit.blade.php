@@ -127,14 +127,14 @@
                     <div class="col-md-12">
                       <label for="video">
                         
-                        @if ($dish->video)
+                        @if ($dish->video && $dish->video != 'on')
                         Modifica il video del tuo piatto
                         <input type="checkbox" name="video">
                         @else
                         Inserisci video del tuo piatto
                         @endif
                         </label>
-                    <input  type="file" class="form-control" name="video[]" placeholder="address" >
+                    <input  type="file" class="form-control" name="video" placeholder="address" >
                     </div>
                   </div>
                   
