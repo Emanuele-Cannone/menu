@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Diet;
-use App\Ingredient;
 use App\Http\Controllers\Controller;
 
 class DietController extends Controller

@@ -5,13 +5,12 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Dish;
 use App\Type;
-use App\Image;
-use App\Ingredient;
+use App\Diet;
+use App\Intollerance;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\User\Detail;
-use PhpParser\Node\Stmt\Foreach_;
+
 
 class DishController extends Controller
 {
@@ -23,17 +22,10 @@ class DishController extends Controller
     public function index()
     {
         $dishes = Dish::all();
-        foreach ($dishes as $dish) {
-            $pippos = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
-            foreach ($pippos as $pippo) {
-                $ingredients = DB::table('ingredients')->where('id', $pippo->ingredient_ID)->get();
-                // dump($ingredients);
-            }
-        }
+
 
         $data = [
             'dishes' => $dishes,
-            'ingredients' => $ingredients
         ];
 
         return view('user.dish.index', $data);
@@ -47,12 +39,15 @@ class DishController extends Controller
     public function create()
     {
         $types = Type::all();
-        $ingredients = Ingredient::all();
+        $diets = Diet::all();
+        $intollerances = Intollerance::all();
+
 
 
         $data = [
             'types' => $types,
-            'ingredients' => $ingredients,
+            'diets' => $diets,
+            'intollerances' => $intollerances,
         ];
 
         return view('user.dish.create', $data);
@@ -67,7 +62,7 @@ class DishController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $ingredients = Ingredient::all();
+
 
         $newDish = new Dish;
 
@@ -81,24 +76,17 @@ class DishController extends Controller
 
         $newDish->images = json_encode($images);
 
-        $data['availability'] = $request->input('availability');
+        $data['available'] = $request->input('availability');
         $data['promo'] = $request->input('promo');
         $data['take_away'] = $request->input('take_away');
 
-        // Ingredient
-        foreach ($ingredients as $ingredient) {
-            $sql = DB::table('ingredient_dish')->where('dish_ID', $newDish->id)->where('ingredient_ID', $ingredient->id);
-            $data[$ingredient->name] = $request->input($ingredient->name);
-            if (!$request->input($ingredient->name) || $sql) {
-                $sql->delete();
-            }
-        }
-
-        $newDish->type_ID = $request->input('type');
+        $newDish->type_id = $request->input('type');
+        $newDish->intollerance_id = $request->input('intollerance');
+        $newDish->diet_id = $request->input('diet');
         $newDish->video = $request->input('video');
 
-        $newDish->availability = 0;
-        if ($data['availability']) {
+        $newDish->available = 0;
+        if ($data['available']) {
             $newDish->availability = 1;
         }
 
@@ -114,11 +102,6 @@ class DishController extends Controller
 
         $newDish->fill($data);
         $newDish->save();
-
-        // Ingredient sync
-        foreach ($ingredients as $ingredient) {
-            $newDish->ingredient()->sync($data[$ingredient->name]);
-        }
 
         return redirect()->route('dish.index');
     }
@@ -143,19 +126,15 @@ class DishController extends Controller
     public function edit(Dish $dish)
     {
         $types = Type::all();
-        $ingredients = Ingredient::all();
+        $diets = Diet::all();
+        $intollerances = Intollerance::all();
 
-        $ingredient_dishes = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
-
-        $images = json_decode($dish->images);
 
 
         $data = [
-            'dish' => $dish,
             'types' => $types,
-            'ingredients' => $ingredients,
-            'ingredient_dishes' => $ingredient_dishes,
-            'images' => $images,
+            'diets' => $diets,
+            'intollerances' => $intollerances,
         ];
 
         return view('user.dish.edit', $data);
@@ -170,7 +149,7 @@ class DishController extends Controller
      */
     public function update(Request $request, Dish $dish)
     {
-        $ingredients = Ingredient::all();
+
         $data = $request->all();
 
         $images = json_decode($dish->images);
@@ -195,25 +174,21 @@ class DishController extends Controller
 
         $dish->images = json_encode($images);
 
-        $data['availability'] = $request->input('availability');
+        $data['available'] = $request->input('available');
         $data['promo'] = $request->input('promo');
         $data['take_away'] = $request->input('take_away');
 
-        $dish->type_ID = $request->input('type');
-
-        // Diets
-        foreach ($ingredients as $ingredient) {
-            $sql = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->where('ingredient_ID', $ingredient->id);
-            $data[$ingredient->name] = $request->input($ingredient->name);
-            if (!$request->input($ingredient->name) || $sql) {
-                $sql->delete();
-            }
-        }
+        $dish->type_id = $request->input('type');
+        $dish->intollerance_id = $request->input('intollerance');
+        $dish->diet_id = $request->input('diet');
+        $dish->video = $request->input('video');
 
 
-        $dish->availability = 0;
-        if ($data['availability']) {
-            $dish->availability = 1;
+
+
+        $dish->available = 0;
+        if ($data['available']) {
+            $dish->available = 1;
         } else {
         }
 
@@ -234,10 +209,6 @@ class DishController extends Controller
 
         $dish->update($data);
 
-        // Ingredient sync
-        foreach ($ingredients as $ingredient) {
-            $dish->ingredient()->sync($data[$ingredient->name]);
-        }
 
         return redirect()->route('dish.index');
     }

@@ -10,8 +10,8 @@ class Diet extends Model
         "name"
     ];
 
-    public function ingredient()
+    public function dish()
     {
-        return $this->belongsToMany('App\Ingredient', 'diet_ingredient');
+        return $this->belongsToMany('App\Dish', 'diet_dish');
     }
 }

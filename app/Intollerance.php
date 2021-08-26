@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Intollerance extends Model
 {
-    public function ingredient()
+    public function dish()
     {
-        return $this->hasMany('App\Ingredient');
+        return $this->hasMany('App\Dish');
     }
 }

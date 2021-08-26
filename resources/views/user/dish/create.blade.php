@@ -38,8 +38,8 @@
     
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="availability">Inserisci disponibilità</label>
-                      <input type="checkbox" class="form-control" id="availability" name="availability">
+                      <label for="available">Inserisci disponibilità</label>
+                      <input type="checkbox" class="form-control" id="available" name="available">
                     </div>
                   </div>
 
@@ -59,28 +59,11 @@
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <label for="major_price">Inserisci maggiorazione</label>
-                      <input type="number" class="form-control" id="major_price" name="major_price">
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-md-12">
                       <label for="take_away">Inserisci take away</label>
                       <input type="checkbox" class="form-control" id="take_away" name="take_away">
                     </div>
                   </div>
-    
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                        @foreach ($ingredients as $ingredient)
-                        <label for="ingredient">{{ $ingredient->name }}</label>
-                      
-                          <input type="checkbox" class="form-control" id="ingredient" name="{{ $ingredient->name }}" value="{{ $ingredient->id }}">
-                          @endforeach
-              
-                    </div>
-                  </div>  
+
 
                   <div class="form-group row">
                     <div class="col-md-12">
@@ -88,6 +71,29 @@
                       <select name="type" id="type">
                           @foreach ($types as $type)
                               <option value="{{ $type->id }}">{{ $type->name }}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                  </div>  
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="diet">Inserisci dieta</label>
+                      <select name="diet" id="diet">
+                          @foreach ($diets as $diet)
+                              <option value="{{ $diet->id }}">{{ $diet->name }}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                  </div>  
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <label for="intollerance">Inserisci intolleranza</label>
+                      <select name="intollerance" id="intollerance">
+                        <option value="0">-</option>
+                          @foreach ($intollerances as $intollerance)
+                              <option value="{{ $intollerance->id }}">{{ $intollerance->name }}</option>
                           @endforeach
                       </select>
                     </div>
