@@ -127,9 +127,9 @@
                     <div class="col-md-12">
                       <label for="video">
                         
-                        @if ($dish->video && $dish->video != 'on')
+                        @if ($dish->video)
                         Modifica il video del tuo piatto
-                        <input type="checkbox" name="video">
+                        <input type="checkbox" name="video_altro">
                         @else
                         Inserisci video del tuo piatto
                         @endif

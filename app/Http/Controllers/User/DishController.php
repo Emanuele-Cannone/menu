@@ -201,6 +201,7 @@ class DishController extends Controller
             }
         }
 
+
         $dish->availability = 0;
         if ($data['availability']) {
             $dish->availability = 1;
@@ -217,9 +218,10 @@ class DishController extends Controller
             $dish->take_away = 1;
         }
 
-        if ($data['video']) {
-            $dish->video = 0;
+        if (isset($data['video_altro'])) {
+            $dish->video = null;
         }
+
 
         $dish->update($data);
 
