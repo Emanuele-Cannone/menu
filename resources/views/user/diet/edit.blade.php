@@ -14,18 +14,18 @@
           <div class="col-md-8 col-lg-6">
             <div class="card">
               <div class="card-header text-center font-weight-bold">
-                Nuova portata
+                Nuovo annuncio
               </div>
               <div class="card-body">
                 {{-- form --}}
-                <form id="form" action="{{route('diet.store')}}" method="post" enctype="multipart/form-data">
+                <form id="form" action="{{route('diet.update', $diet)}}" method="post" enctype="multipart/form-data">
                   @csrf
-                  @method('POST')
+                  @method('PUT')
     
                   <div class="form-group row">
                     <div class="col-md-12">
                       <label for="name">Inserisci nome</label>
-                      <input type="text" class="form-control" id="name" name="name">
+                      <input type="text" class="form-control" id="name" name="name" value="{{ $diet->name }}"> 
                     </div>
                   </div> 
     

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Diet;
 use App\Ingredient;
+use App\Http\Controllers\Controller;
 
 class DietController extends Controller
 {
@@ -31,13 +32,8 @@ class DietController extends Controller
      */
     public function create()
     {
-        $ingredients = Ingredient::all();
 
-        $data = [
-            'ingredients' => $ingredients
-        ];
-
-        return view('user.ingredient.create', $data);
+        return view('user.diet.create');
     }
 
     /**
@@ -48,7 +44,14 @@ class DietController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $newDiet = new Diet;
+
+        $newDiet->fill($data);
+        $newDiet->save();
+
+        return redirect()->route('diet.index');
     }
 
     /**
@@ -68,9 +71,13 @@ class DietController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Diet $diet)
     {
-        //
+        $data = [
+            'diet' => $diet,
+        ];
+
+        return view('user.diet.edit', $data);
     }
 
     /**
@@ -80,9 +87,13 @@ class DietController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Diet $diet)
     {
-        //
+        $data = $request->all();
+
+        $diet->update($data);
+
+        return redirect()->route('diet.index');
     }
 
     /**
@@ -91,8 +102,10 @@ class DietController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Diet $diet)
     {
-        //
+        $diet->delete();
+
+        return redirect()->route('diet.index');
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\User\Detail;
+use PhpParser\Node\Stmt\Foreach_;
 
 class DishController extends Controller
 {
@@ -22,9 +23,17 @@ class DishController extends Controller
     public function index()
     {
         $dishes = Dish::all();
+        foreach ($dishes as $dish) {
+            $pippos = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
+            foreach ($pippos as $pippo) {
+                $ingredients = DB::table('ingredients')->where('id', $pippo->ingredient_ID)->get();
+                // dump($ingredients);
+            }
+        }
 
         $data = [
-            'dishes' => $dishes
+            'dishes' => $dishes,
+            'ingredients' => $ingredients
         ];
 
         return view('user.dish.index', $data);
@@ -239,8 +248,10 @@ class DishController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Dish $dish)
     {
-        //
+        $dish->delete();
+
+        return redirect()->route('dish.index');
     }
 }

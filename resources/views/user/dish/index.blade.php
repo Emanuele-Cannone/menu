@@ -9,6 +9,14 @@
 <body>
     @foreach ($dishes as $dish)
         <p>{{ $dish->name }}</p>
+        <?php 
+        $pippos = DB::table('ingredient_dish')->where('dish_ID', $dish->id)->get();
+            foreach ($pippos as $pippo) {
+                $ingredients = DB::table('ingredients')->where('id', $pippo->ingredient_ID)->get();
+                dump($ingredients);
+            }
+        ?>
+
         <a href="{{route('dish.edit', $dish->id)}}">Modifica</a>
         <form action="{{ route('dish.destroy', $dish->id) }}" method='post'>
             @csrf

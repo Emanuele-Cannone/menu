@@ -28,4 +28,5 @@ Route::prefix('user')
         Route::resource('ingredient', 'IngredientController');
         Route::resource('type', 'TypeController');
         Route::resource('dish', 'DishController');
+        Route::resource('diet', 'DietController');
     });
