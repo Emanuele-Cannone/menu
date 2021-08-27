@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.5.5-10.5.9-MariaDB)
 # Database: menu
-# Generation Time: 2021-08-27 07:15:04 +0000
+# Generation Time: 2021-08-27 07:31:57 +0000
 # ************************************************************
 
 
@@ -41,20 +41,6 @@ VALUES
 
 /*!40000 ALTER TABLE `conservations` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# Dump of table diet_dish
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `diet_dish`;
-
-CREATE TABLE `diet_dish` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `diet_id` int(11) unsigned NOT NULL,
-  `dish_id` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 
 
 # Dump of table diets
@@ -91,7 +77,11 @@ CREATE TABLE `dish_intollerance` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `dish_id` int(11) unsigned NOT NULL,
   `intollerance_id` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `dish_id` (`dish_id`),
+  KEY `intollerance_id` (`intollerance_id`),
+  CONSTRAINT `dish_intollerance_ibfk_1` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `dish_intollerance_ibfk_2` FOREIGN KEY (`intollerance_id`) REFERENCES `intollerances` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -104,14 +94,13 @@ DROP TABLE IF EXISTS `dishes`;
 CREATE TABLE `dishes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `type_id` int(11) unsigned NOT NULL,
-  `intollerance_id` int(11) unsigned NOT NULL,
   `diet_id` int(11) unsigned NOT NULL,
+  `conservation_id` int(11) unsigned NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   `available` tinyint(1) NOT NULL,
   `price` double(11,2) NOT NULL,
   `take_away` tinyint(1) NOT NULL,
-  `conservation_id` int(11) unsigned NOT NULL,
   `images` varchar(255) DEFAULT '',
   `video` varchar(255) DEFAULT '',
   `promo` tinyint(1) NOT NULL,
@@ -119,15 +108,26 @@ CREATE TABLE `dishes` (
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
-  KEY `intollerance_id` (`intollerance_id`),
   KEY `diet_id` (`diet_id`),
   KEY `conservation_id` (`conservation_id`),
   CONSTRAINT `dishes_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `dishes_ibfk_2` FOREIGN KEY (`intollerance_id`) REFERENCES `intollerances` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `dishes_ibfk_3` FOREIGN KEY (`diet_id`) REFERENCES `diets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `dishes_ibfk_4` FOREIGN KEY (`conservation_id`) REFERENCES `conservations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+LOCK TABLES `dishes` WRITE;
+/*!40000 ALTER TABLE `dishes` DISABLE KEYS */;
+
+INSERT INTO `dishes` (`id`, `type_id`, `diet_id`, `conservation_id`, `name`, `description`, `available`, `price`, `take_away`, `images`, `video`, `promo`, `updated_at`, `created_at`)
+VALUES
+	(1,2,2,2,'a','a',1,12.00,1,'[]',NULL,1,'2021-08-27 07:19:43','2021-08-27 07:19:05'),
+	(2,2,2,2,'b','b',1,12.00,1,'[]',NULL,1,'2021-08-27 07:21:06','2021-08-27 07:21:06'),
+	(3,2,2,2,'q','q',1,12.00,1,'[]',NULL,1,'2021-08-27 07:24:30','2021-08-27 07:24:30'),
+	(4,2,2,2,'q','q',1,12.00,1,'[]',NULL,1,'2021-08-27 07:26:19','2021-08-27 07:26:19'),
+	(5,2,2,2,'q','q',1,12.00,1,'[]',NULL,1,'2021-08-27 07:30:55','2021-08-27 07:30:55');
+
+/*!40000 ALTER TABLE `dishes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table failed_jobs
