@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.5.5-10.5.9-MariaDB)
 # Database: menu
-# Generation Time: 2021-08-26 15:59:28 +0000
+# Generation Time: 2021-08-27 07:15:04 +0000
 # ************************************************************
 
 
@@ -18,6 +18,29 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table conservations
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `conservations`;
+
+CREATE TABLE `conservations` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `conservations` WRITE;
+/*!40000 ALTER TABLE `conservations` DISABLE KEYS */;
+
+INSERT INTO `conservations` (`id`, `name`)
+VALUES
+	(1,'fresco'),
+	(2,'congelato');
+
+/*!40000 ALTER TABLE `conservations` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table diet_dish
@@ -52,7 +75,8 @@ LOCK TABLES `diets` WRITE;
 
 INSERT INTO `diets` (`id`, `name`, `created_at`, `updated_at`)
 VALUES
-	(1,'vegetariano+','2021-08-26 15:55:41','2021-08-26 15:55:46');
+	(1,'vegetariano','2021-08-26 15:55:41','2021-08-27 07:10:15'),
+	(2,'vegano','2021-08-27 07:10:27','2021-08-27 07:10:27');
 
 /*!40000 ALTER TABLE `diets` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -87,16 +111,21 @@ CREATE TABLE `dishes` (
   `available` tinyint(1) NOT NULL,
   `price` double(11,2) NOT NULL,
   `take_away` tinyint(1) NOT NULL,
-  `conservation` varchar(100) NOT NULL DEFAULT '',
+  `conservation_id` int(11) unsigned NOT NULL,
   `images` varchar(255) DEFAULT '',
   `video` varchar(255) DEFAULT '',
+  `promo` tinyint(1) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   KEY `intollerance_id` (`intollerance_id`),
   KEY `diet_id` (`diet_id`),
+  KEY `conservation_id` (`conservation_id`),
   CONSTRAINT `dishes_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `dishes_ibfk_2` FOREIGN KEY (`intollerance_id`) REFERENCES `intollerances` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `dishes_ibfk_3` FOREIGN KEY (`diet_id`) REFERENCES `diets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `dishes_ibfk_3` FOREIGN KEY (`diet_id`) REFERENCES `diets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `dishes_ibfk_4` FOREIGN KEY (`conservation_id`) REFERENCES `conservations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -210,7 +239,8 @@ LOCK TABLES `types` WRITE;
 
 INSERT INTO `types` (`id`, `name`, `updated_at`, `created_at`)
 VALUES
-	(1,'antipasti+','2021-08-26 15:56:01','2021-08-26 15:55:01');
+	(1,'antipasti','2021-08-27 07:10:02','2021-08-26 15:55:01'),
+	(2,'Primi Piatti','2021-08-27 07:10:47','2021-08-27 07:10:47');
 
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 UNLOCK TABLES;
