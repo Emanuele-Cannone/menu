@@ -11,7 +11,6 @@ class Dish extends Model
         "name",
         "description",
         "price",
-        
         "video",
     ];
 

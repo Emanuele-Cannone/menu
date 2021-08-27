@@ -113,6 +113,11 @@ class DishController extends Controller
         $newDish->fill($data);
         $newDish->save();
 
+        // Intollerance sync
+        foreach ($intollerances as $intollerance) {
+            $newDish->intollerance()->sync($data[$intollerance->name]);
+        }
+
         return redirect()->route('dish.index');
     }
 
